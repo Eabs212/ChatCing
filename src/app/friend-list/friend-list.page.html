@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title>Friends</ion-title>
+    <ion-buttons slot="start"> <ion-back-button></ion-back-button> </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf='list?.length'>
+    <ion-item *ngFor='let profile of list'>
+      <ion-avatar item-left > 
+        <ion-img class="image-profile" [src]='profile.avatar' *ngIf='profile.avatar' (click)='show(profile)'></ion-img>
+        <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!profile.avatar' (click)='show(profile)'>    
+      </ion-avatar>  
+      <ion-text (click)='chat(profile)'>
+        <h2>{{profile.firstName}} {{profile.lastName}}</h2>
+        <h6>{{profile.email}}</h6>
+      </ion-text>
+    </ion-item>
+  
+  </ion-list>
+</ion-content>

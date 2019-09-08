@@ -1,0 +1,73 @@
+<ion-row>
+      <ion-col size=3 align-self-center >     
+       <ion-avatar> 
+        <ion-img class="image-profile" [src]='profile.avatar' *ngIf='profile.avatar'></ion-img>
+        <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!profile.avatar'></ion-avatar>
+      </ion-col>
+      <ion-col size=9 align-self-center  *ngIf='changePhoto'>
+       <ion-progress-bar [value]='time'></ion-progress-bar>
+       <ion-label >{{time * 100}}%</ion-label>
+      </ion-col>
+  </ion-row> 
+<form #profileForm='ngForm' novalidate >
+<ion-card>
+  <ion-card-content>
+    <ion-item>
+      <ion-label position=floating>First Name</ion-label>
+      <ion-input [(ngModel)]='profile.firstName' type="text"  name='firstName' #firstName='ngModel' required> </ion-input>
+    </ion-item>
+    <ion-item>
+        <ion-label position=floating>Last Name</ion-label>
+        <ion-input [(ngModel)]='profile.lastName' type="text" name='lastName'  #lastName='ngModel' required> </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position=floating>Date Of Birth</ion-label>
+        <ion-datetime [(ngModel)]='profile.dateOfBirth' name='dateOfBirth' #dateOfBirth='ngModel' displayFormat='DD/MM/YYYY' required></ion-datetime>
+      </ion-item>      
+
+      <div *ngIf='more'>
+        <ion-item>
+          <ion-label position=floating>Email Address</ion-label>
+              <ion-input [(ngModel)]="newEmail" 
+              type="email" name='email'
+              #email='ngModel'
+              pattern="^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z] {2,4}[\W]*,{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$"
+              required [disabled]='changeP'> </ion-input>
+            </ion-item>
+            <div padding *ngIf='email.invalid && email.dirty'>
+                <span>Email address is not valid.</span>
+              </div>
+              <ion-item>
+                <ion-label position=floating>Password</ion-label>
+                <ion-input [(ngModel)]="account.password" 
+                type="password" 
+                name='password'
+                #password='ngModel' 
+                pattern="[a-zA-Z0-9!@#$%^&*]{6,20}$"
+                required> </ion-input>
+                </ion-item>
+                <div padding *ngIf='password.invalid && password.dirty'>
+                  <span>Password must be a least 6 characters.</span>
+                </div>
+              <ion-item>
+                  <ion-label position=floating>New Password</ion-label>
+                  <ion-input [(ngModel)]="newPassword" 
+                  type="password" 
+                  name='passwordN'
+                  #passwordN='ngModel' 
+                  pattern="[a-zA-Z0-9!@#$%^&*]{6,20}$"
+                  required  [disabled]='!changeP'> </ion-input>
+                  </ion-item>
+                  <div padding *ngIf='passwordN.invalid && passwordN.dirty'>
+                    <span>Password must be a least 6 characters.</span>
+                  </div>
+                  <ion-button (click)='change()' fill='clear' color='primary' >{{text}}</ion-button>
+                  </div>
+                </ion-card-content>
+      <ion-row>      
+        <ion-button (click)='pickImage()' fill='clear' color='primary' >Select Profile Photo</ion-button>
+        <ion-button (click)='changeProfile()' [disabled]='profileForm.invalid'>Save</ion-button>
+      </ion-row>
+    </ion-card>
+  </form>
+  

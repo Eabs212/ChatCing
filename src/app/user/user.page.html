@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title>{{user?.email}}</ion-title>
+    <ion-buttons slot="start"> <ion-back-button defaultHref="tabs/search"></ion-back-button> </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-profile-detail [profile]='user' (Operation)='addFriend($event)'></app-profile-detail>
+
+</ion-content>

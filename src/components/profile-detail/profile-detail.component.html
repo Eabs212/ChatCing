@@ -1,0 +1,50 @@
+<div *ngIf="userProfile"><div class="container">
+  <ion-grid>
+    <ion-row align-items-center>
+      <ion-col align-self-center>
+            <ion-avatar > 
+                <ion-img class="image-profile" [src]='userProfile.avatar' (ionImgDidLoad)="ready()" *ngIf='userProfile.avatar' (click)='showPic(userProfile.avatar)'></ion-img>
+                <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!userProfile.avatar'>
+              </ion-avatar>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</div>
+  <ion-button *ngIf='profile && !followingUser' (click)='addFriend()'>Add Friend</ion-button>
+  <ion-button *ngIf='profile && followingUser' (click)='deleteFriend()' color='danger'>Delete Friend</ion-button>
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div (click)='navigate()'>
+              <ion-label class="center">Friends</ion-label>
+              <h2 class="center">{{list?.length}}</h2>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>  
+        <ion-item>
+            <ion-label position=floating>Email</ion-label>
+            <ion-input [value]='userProfile.email' type="text" [readonly]='true'> </ion-input>
+          </ion-item>      
+      <ion-item>
+        <ion-label position=floating>First Name</ion-label>
+        <ion-input  class="pretty" [value]='userProfile.firstName' type="text" [readonly]='true'> </ion-input>
+      </ion-item>
+      <ion-item>
+          <ion-label position=floating>Last Name</ion-label>
+          <ion-input class="pretty" [value]='userProfile.lastName' type="text" [readonly]='true'> </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position=floating>Date Of Birth</ion-label>
+          <ion-datetime [value]='userProfile.dateOfBirth' displayFormat='DD/MM/YYYY' [readonly]='true'></ion-datetime>
+        </ion-item>      
+      </ion-card-content>
+  </ion-card>
+
+  <ion-button *ngIf='!profile' (click)='logout()' color='medium'>Logout</ion-button>
+</div>

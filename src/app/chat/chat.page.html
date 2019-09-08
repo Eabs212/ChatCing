@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-row>
+    <ion-avatar>
+          <ion-img class="image-profile" [src]='user.avatar' *ngIf='user.avatar' (click)='showPic(user.avatar)'></ion-img>
+          <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!user.avatar'>
+        </ion-avatar>
+    <ion-title>{{user?.firstName}} {{user?.lastName}}</ion-title>
+    </ion-row>
+
+    <ion-buttons slot="start"> <ion-back-button defaultHref="tabs"></ion-back-button> </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+<ion-list *ngIf='messages?.length'>
+
+
+    <div class="message" *ngFor="let message of messages">
+      <div class='innerMessage messageRight' *ngIf='message.userFromId == account.uid'>
+        <div>
+          <h2 class="userName">{{ message.userFromProfile.firstName }} {{message.userFromProfile.lastName}}</h2>
+          <div class="msg" *ngIf='+message.type === 1'>{{ message.content }} </div>
+          <div class="msg image" *ngIf='+message.type === 2'>
+            <ion-img [src]="message.content" alt="error" (click)='showPic(message.content)'></ion-img></div>        </div>
+        <div class="date">{{message.date}}</div>
+      </div>
+      <div  *ngIf='message.userFromId != account.uid'>
+      <div class='innerMessage messageLeft'>
+        <h2 class="userName">{{ message.userFromProfile.firstName}} {{message.userFromProfile.lastName}}</h2>
+        <div class="msg" *ngIf='+message.type === 1'>{{ message.content }} </div>
+        <div class="msg" *ngIf='+message.type === 2'>
+          <ion-img [src]="message.content" (click)='showPic(message.content)' alt="error"></ion-img></div>
+        <div class="date">{{message.date}}</div>
+      </div>      
+    </div> 
+
+    </div>
+</ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-textarea name="message" placeholder="Message" id="mgs-send" [(ngModel)]="message"></ion-textarea>
+    <ion-buttons slot='end'>
+        <ion-button (click)="openModal()"><ion-icon name="image"></ion-icon></ion-button>
+      <ion-button icon-right color="royal" (click)="sendMessage()">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

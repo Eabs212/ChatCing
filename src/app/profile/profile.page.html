@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title>Profile</ion-title>
+    <ion-buttons slot="secondary">
+      <ion-button (click)="navigate('edit-profile')">
+        <ion-icon slot="icon-only" name="settings"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-profile-detail (existingProfile)='getProfile($event)'></app-profile-detail>
+</ion-content>

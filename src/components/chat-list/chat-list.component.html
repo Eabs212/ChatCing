@@ -1,0 +1,52 @@
+<ion-list *ngIf='list?.length'>
+    <ion-virtual-scroll [items]="list" approxItemHeight="150px" >
+
+        <ion-item *virtualItem="let user;">
+<ion-grid *ngIf='account.uid !== user.userToId'>
+      <ion-row>
+        <ion-col size='3' align-self-center>
+          <ion-avatar> 
+              <img class="image-profile" [src]='user.userToProfile.avatar' *ngIf='user.userToProfile.avatar' (click)='show(user)'>
+              <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!user.userToProfile.avatar'  (click)='show(user)'>
+            </ion-avatar>
+        </ion-col>
+        <ion-col size='9' (click)='goChat(user)'>
+          <h2>{{user.userToProfile.firstName}} {{user.userToProfile.lastName}}</h2>
+          <ion-row>
+            <ion-col size='9'>
+                <p *ngIf='user.type === 1'>{{user.content}}</p>
+                <p *ngIf='user.type === 2'>Image</p>            
+              </ion-col>
+            <ion-col size='3'>
+              <p>{{user.date}}</p>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      </ion-grid>
+    <ion-grid *ngIf='account.uid === user.userToId'>
+        <ion-row>
+          <ion-col size='3' align-self-center>
+            <ion-avatar> 
+                <img class="image-profile" [src]='user.userFromProfile.avatar' *ngIf='user.userFromProfile.avatar' (click)='show(user)'>
+                <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!user.userFromProfile.avatar' (click)='show(user)'>
+          </ion-avatar>
+          </ion-col>
+          <ion-col size='9' (click)='goChat(user)'>
+              <h2>{{user.userFromProfile.firstName}} {{user.userFromProfile.lastName}}</h2>
+            <ion-row>
+              <ion-col size='9'>
+                <p *ngIf='user.type === 1'>{{user.content}}</p>
+                <p *ngIf='user.type === 2'>Image</p>
+              </ion-col>
+              <ion-col size='3'>
+                <p>{{user.date}}</p>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        </ion-grid>
+  </ion-item>
+    </ion-virtual-scroll>
+
+</ion-list>

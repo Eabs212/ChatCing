@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-title>Edit Profile</ion-title>
+    <ion-buttons slot="start"> <ion-back-button defaultHref="tabs/profile"></ion-back-button> </ion-buttons>
+    <ion-buttons slot="secondary" *ngIf='!new' color=light>
+      <ion-label>More</ion-label>
+      <ion-toggle [(ngModel)]="more" color=light></ion-toggle> 
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<app-edit-profile-form [profile]='profile' [more]='more' (saveProfile)='saveProfile($event)'></app-edit-profile-form>
+</ion-content>

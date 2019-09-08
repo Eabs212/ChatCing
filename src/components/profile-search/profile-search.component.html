@@ -1,0 +1,38 @@
+<ion-searchbar [(ngModel)]='query' (ionChange)='search(query)' debounce="500"></ion-searchbar>
+
+<ion-list *ngIf='profileList?.length || listFilter?.length ' >
+  <div *ngIf='!filter'>
+      <ion-virtual-scroll [items]="profileList" approxItemHeight="150px" >
+
+      <ion-item *virtualItem='let profile' (click)='getUser(profile)'>
+    <ion-avatar item-left> 
+      <ion-img class="image-profile" [src]='profile.avatar' *ngIf='profile.avatar'></ion-img>
+      <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!profile.avatar'>    </ion-avatar>
+    <ion-text>
+      <h2>{{profile.firstName}} {{profile.lastName}}</h2>
+      <h6>{{profile.email}}</h6>
+    </ion-text>
+  </ion-item>
+</ion-virtual-scroll>
+  </div>
+
+<div *ngIf='filter'>
+    <ion-text *ngIf='listFilter?.length === 0'>
+        <h2 id="text" >no results</h2>
+      </ion-text>
+    <ion-virtual-scroll [items]="listFilter" approxItemHeight="150px" >
+
+      <ion-item *virtualItem='let profile' (click)='getUser(profile)'>
+      <ion-avatar item-left> 
+        <ion-img class="image-profile" [src]='profile.avatar' *ngIf='profile.avatar'></ion-img>
+        <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!profile.avatar'>    </ion-avatar>
+      <ion-text>
+        <h2>{{profile.firstName}} {{profile.lastName}}</h2>
+        <h6>{{profile.email}}</h6>
+      </ion-text>
+    </ion-item>
+  </ion-virtual-scroll>
+
+</div>
+</ion-list>
+
