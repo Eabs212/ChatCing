@@ -87,9 +87,9 @@ export class EditProfileFormComponent implements OnInit, OnDestroy {
     const options: CameraOptions = {
       allowEdit: true,
       sourceType: 2,
-      quality: 80,
+      quality: 100,
       targetHeight: 200,
-      targetWidth: 200,
+      targetWidth: 250,
       correctOrientation: true,
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,

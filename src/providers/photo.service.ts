@@ -29,7 +29,8 @@ export class PhotoService {
   }
 
    getTimeLine(): Observable<State[]> {
-    const data = this.database.list(`photos-timeline`).valueChanges();
+    const data = this.database.list(`photos-timeline`, res =>
+    res.orderByChild('date')).valueChanges();
     return data as unknown as Observable<State[]>;
   }
 }

@@ -5,7 +5,7 @@
           <ion-img class="image-profile" [src]='user.avatar' *ngIf='user.avatar' (click)='showPic(user.avatar)'></ion-img>
           <img class="image-profile" src='../../assets/shapes.svg' *ngIf='!user.avatar'>
         </ion-avatar>
-    <ion-title>{{user?.firstName}} {{user?.lastName}}</ion-title>
+    <ion-title class="name">{{user?.firstName}} {{user?.lastName}}</ion-title>
     </ion-row>
 
     <ion-buttons slot="start"> <ion-back-button defaultHref="tabs"></ion-back-button> </ion-buttons>
