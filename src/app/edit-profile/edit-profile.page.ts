@@ -19,9 +19,6 @@ export class EditProfilePage implements OnInit {
       this.profile.avatar = paramMap.get('avatar');
       this.profile.firstName = paramMap.get('firstName');
       this.profile.lastName = paramMap.get('lastName');
-      if (paramMap.has('dateOfBirth')) {
-      this.profile.dateOfBirth = new Date(paramMap.get('dateOfBirth')).toISOString() as unknown as Date;
-      }
     });
    }
 

@@ -11,17 +11,23 @@
   </ion-grid>
 
 </div>
-  <ion-button *ngIf='profile && !followingUser' (click)='addFriend()'>Add Friend</ion-button>
-  <ion-button *ngIf='profile && followingUser' (click)='deleteFriend()' color='danger'>Delete Friend</ion-button>
+  <ion-button *ngIf='profile && !followingUser && !block  && !iamblock' (click)='follow()'>follow</ion-button>
+  <ion-button *ngIf='profile && followingUser && !block && !iamblock' (click)='unFollow()' color='danger'>unFollow</ion-button>
   <ion-card>
     <ion-card-content>
       <ion-item>
       <ion-grid>
         <ion-row>
           <ion-col>
-            <div (click)='navigate()'>
-              <ion-label class="center">Friends</ion-label>
+            <div (click)='navigate(1)'>
+              <ion-label class="center">Following</ion-label>
               <h2 class="center">{{list?.length}}</h2>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div (click)='navigate(2)'>
+              <ion-label class="center">Followers</ion-label>
+              <h2 class="center">{{listF?.length}}</h2>
             </div>
           </ion-col>
         </ion-row>
@@ -39,12 +45,10 @@
           <ion-label position=floating>Last Name</ion-label>
           <ion-input class="pretty" [value]='userProfile.lastName' type="text" [readonly]='true'> </ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label position=floating>Date Of Birth</ion-label>
-          <ion-datetime [value]='userProfile.dateOfBirth' displayFormat='DD/MM/YYYY' [readonly]='true'></ion-datetime>
-        </ion-item>      
+  
       </ion-card-content>
   </ion-card>
-
+  <ion-button *ngIf='profile && !block && !iamblock' (click)='blockUser()'>Block</ion-button>
+  <ion-button *ngIf='profile && block && !iamblock' (click)='disBlock()' color='danger'>Disblock</ion-button>
   <ion-button *ngIf='!profile' (click)='logout()' color='medium'>Logout</ion-button>
 </div>

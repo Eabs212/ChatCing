@@ -11,11 +11,11 @@ export class DataService {
   profileList: AngularFireList<Profile>;
   constructor(private database: AngularFireDatabase) { }
 
-   addFriend(user1: Profile, user2: Profile) {
+   follow(user1: Profile, user2: Profile) {
       console.log(user2);
       try {
-      this.database.database.ref(`/friends/${user1.uid}/friends`).push(user2);
-      this.database.database.ref(`/friends/${user2.uid}/friends`).push(user1);
+      this.database.database.ref(`/follows/${user1.uid}/follow`).push(user2);
+      this.database.database.ref(`/followers/${user2.uid}/follow`).push(user1);
       return true;
     } catch (e) {
       console.log(e);
@@ -23,12 +23,34 @@ export class DataService {
     }
   }
 
-  deleteFriend(user1: Profile, user2: Profile) {
+  block(user1: Profile, user2: Profile) {
+    console.log(user2);
     try {
-      this.database.list(`/friends/${user1.uid}/friends`, res =>
-      res.orderByChild('email').equalTo(user2.email)).remove();
-      this.database.list(`/friends/${user2.uid}/friends`, res =>
-      res.orderByChild('email').equalTo(user1.email)).remove();
+    this.unFollow(user1, user2);
+    this.database.database.ref(`/blocks/${user1.uid}/block`).push(user2);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+disBlock(user1: Profile, user2: Profile) {
+  try {
+    this.database.list(`/blocks/${user1.uid}/block`, res =>
+    res.orderByChild('uid').equalTo(user2.uid)).remove();
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+  unFollow(user1: Profile, user2: Profile) {
+    try {
+      this.database.list(`/follows/${user1.uid}/follow`, res =>
+      res.orderByChild('uid').equalTo(user2.uid)).remove();
+      this.database.list(`/followers/${user2.uid}/follow`, res =>
+      res.orderByChild('uid').equalTo(user1.uid)).remove();
       return true;
     } catch (e) {
       console.log(e);
@@ -36,26 +58,63 @@ export class DataService {
     }
   }
 
-  isFriend(user1: Profile, user2: Profile) {
+  isFollow(user1: Profile, user2: Profile) {
     try {
-      const isFriend = this.database.list(`/friends/${user1.uid}/friends`, res =>
-      res.orderByChild('email').equalTo(user2.email)).valueChanges();
+      console.log(user1);
+      console.log(user2);
+
+      const isFriend = this.database.list(`/follows/${user1.uid}/follow`, res =>
+      res.orderByChild('uid').equalTo(user2.uid)).valueChanges();
       return isFriend;
     } catch (e) {
       console.log(e);
     }
   }
-
-  friendList(user: Profile) {
+  isBlock(user1: Profile, user2: Profile) {
     try {
+      console.log(user1);
+      console.log(user2);
+
+      const isFriend = this.database.list(`/blocks/${user1.uid}/block`, res =>
+      res.orderByChild('uid').equalTo(user2.uid)).valueChanges();
+      return isFriend;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  iamBlock(user1: Profile, user2: Profile) {
+    try {
+      console.log(user1);
+      console.log(user2);
+
+      const isFriend = this.database.list(`/blocks/${user2.uid}/block`, res =>
+      res.orderByChild('uid').equalTo(user1.uid)).valueChanges();
+      return isFriend;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  listFollows(user: Profile) {
+    try {
+      console.log(11);
+
       console.log(user);
-      const list = this.database.list(`/friends/${user.uid}/friends`).valueChanges();
+      const list = this.database.list(`/follows/${user.uid}/follow`).valueChanges();
       return list;
     } catch (e) {
       console.log(e);
     }
   }
-
+  listFollowers(user: Profile) {
+    try {
+      console.log(1);
+      console.log(user);
+      const list = this.database.list(`/followers/${user.uid}/follow`).valueChanges();
+      return list;
+    } catch (e) {
+      console.log(e);
+    }
+  }
   searchUser() {
     this.profileList = this.database.list('profiles');
     return     this.profileList.valueChanges();

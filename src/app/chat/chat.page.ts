@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/providers/auth.service';
 import { User } from 'firebase';
@@ -10,17 +10,20 @@ import { Message } from 'src/models/messages/messages.interface';
 import { ChatPhotoPage} from '../chat-photo/chat-photo.page';
 import { take } from 'rxjs/operators';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
 })
-export class ChatPage implements OnInit {
+export class ChatPage implements OnInit, OnDestroy  {
+
   dataReturned: any;
   user = {} as Profile;
   message = '';
   messages: [];
   account: Profile;
+  messages$: Subscription;
   @ViewChild(IonContent, {static: true}) contentArea: IonContent;
   constructor(private navParam: ActivatedRoute , private chat: ChatService,
               private auth: AuthService, private data: DataService,
@@ -39,7 +42,7 @@ export class ChatPage implements OnInit {
     this.auth.getAuthUser().pipe(take(1)).subscribe((user: User) => {
       this.data.getProfile(user).pipe(take(1)).subscribe(async (profile: Profile) => {
         this.account = profile;
-        await this.chat.getMessages(this.account, this.user).subscribe(async res => {
+        this.messages$ = await this.chat.getMessages(this.account, this.user).subscribe(async res => {
           res.map(message =>  message.date = this.getDate(message.date));
           this.messages = await res;
           this.contentArea.scrollToBottom();
@@ -116,5 +119,8 @@ export class ChatPage implements OnInit {
   }
   showPic(url) {
     this.view.show(url, 'Photo', {share: true});
+  }
+  ngOnDestroy(): void {
+    this.messages$.unsubscribe();
   }
 }

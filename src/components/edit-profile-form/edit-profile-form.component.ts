@@ -43,7 +43,9 @@ export class EditProfileFormComponent implements OnInit, OnDestroy {
     if (!this.profile) {
       this.profile = {} as Profile;
     }
+    console.log(this.profile);
   }
+
   async changeProfile() {
     if (this.more) {
       if (!this.changeP) {

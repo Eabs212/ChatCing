@@ -14,11 +14,12 @@ export class FriendListPage implements OnInit {
   user = {} as Profile;
   constructor(private params: ActivatedRoute, private data: DataService, private router: Router) {
     this.params.paramMap.subscribe(paramMap => {
+      console.log(paramMap.keys);
       this.user.uid = paramMap.get('uid');
       this.user.email = paramMap.get('email');
-      this.user.firstName = paramMap.get('firstName');
-      this.user.lastName = paramMap.get('lastName');
-      this.data.friendList(this.user).subscribe(listF => {
+      const op = paramMap.get('op');
+      if (op === '1') {
+      this.data.listFollows(this.user).subscribe(listF => {
         if (this.list.length !== listF.length) {
         listF.map(async elemt => {
           await this.data.getProfile(elemt).subscribe(async profile => {
@@ -28,6 +29,18 @@ export class FriendListPage implements OnInit {
       }
         console.log(listF);
       });
+    } else {
+      this.data.listFollowers(this.user).subscribe(listF => {
+        if (this.list.length !== listF.length) {
+        listF.map(async elemt => {
+          await this.data.getProfile(elemt).subscribe(async profile => {
+            await this.list.push(profile);
+          });
+        });
+      }
+        console.log(listF);
+      });
+    }
     });
    }
 

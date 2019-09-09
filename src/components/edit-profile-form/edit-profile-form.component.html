@@ -20,11 +20,7 @@
         <ion-label position=floating>Last Name</ion-label>
         <ion-input [(ngModel)]='profile.lastName' type="text" name='lastName'  #lastName='ngModel' required> </ion-input>
       </ion-item>
-      <ion-item>
-        <ion-label position=floating>Date Of Birth</ion-label>
-        <ion-datetime [(ngModel)]='profile.dateOfBirth' name='dateOfBirth' #dateOfBirth='ngModel' displayFormat='DD/MM/YYYY' required></ion-datetime>
-      </ion-item>      
-
+   
       <div *ngIf='more'>
         <ion-item>
           <ion-label position=floating>Email Address</ion-label>

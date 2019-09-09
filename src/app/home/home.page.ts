@@ -16,7 +16,8 @@ export class HomePage implements OnInit {
    this.storage.keys().then(p => {
      console.log(p);
      this.storage.get('account').then( profile => {
-     this.router.navigate([`/friend-list`, profile]);
+      const user = {uid: profile.uid , email: profile.email , op: 1};
+      this.router.navigate([`/friend-list`, user]);
    });
   });
 }

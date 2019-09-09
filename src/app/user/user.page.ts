@@ -13,10 +13,8 @@ export class UserPage implements OnInit {
   constructor(private params: ActivatedRoute, private toast: ToastController) {
     this.params.paramMap.subscribe(paramMap => {
       console.log(paramMap.keys);
-      console.log(paramMap.get('firstName') + ' ' + paramMap.get('lastName') );
       this.user.firstName = paramMap.get('firstName');
       this.user.lastName = paramMap.get('lastName');
-      this.user.dateOfBirth = new Date(paramMap.get('dateOfBirth')).toISOString() as unknown as Date;
       this.user.uid = paramMap.get('uid');
       this.user.email = paramMap.get('email');
       this.user.avatar = paramMap.get('avatar');
@@ -29,7 +27,7 @@ export class UserPage implements OnInit {
   addFriend(event) {
     if (event.res) {
       this.toast.create({
-        message: `Friend ${event.op}`,
+        message: `${event.op}`,
         duration: 2000
       }).then((data) => {
         data.present();

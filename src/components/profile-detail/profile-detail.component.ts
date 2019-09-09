@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/providers/auth.service';
 import { DataService } from 'src/providers/data.service';
 import { Profile } from 'src/models/profile/profile.interface';
@@ -7,13 +7,15 @@ import { NavController} from '@ionic/angular';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog/ngx';
 import { Storage } from '@ionic/storage';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile-detail',
   templateUrl: './profile-detail.component.html',
   styleUrls: ['./profile-detail.component.scss'],
 })
-export class ProfileDetailComponent implements OnInit {
+export class ProfileDetailComponent implements OnInit, OnDestroy {
+
   userProfile: Profile;
   accountProfile: Profile;
   followingUser = false;
@@ -21,6 +23,13 @@ export class ProfileDetailComponent implements OnInit {
   @Output() existingProfile: EventEmitter<Profile>;
   @Output() Operation;
   @Input() profile: Profile;
+  private checkBlock$: Subscription;
+  private checkIamBlock$: Subscription;
+  private checkIsFollow$: Subscription;
+
+  listF = [];
+  block = false ;
+  iamblock = false;
   constructor(private auth: AuthService, private data: DataService,
               private nav: NavController, private spinner: SpinnerDialog, private storage: Storage,
               private view: PhotoViewer) {
@@ -34,19 +43,40 @@ export class ProfileDetailComponent implements OnInit {
       this.userProfile = this.profile;
       this.storage.get('account').then( profile => {
           this.accountProfile = profile;
-          this.data.isFriend(this.accountProfile, this.userProfile).subscribe((data) => {
+          this.checkIamBlock$ = this.data.iamBlock(this.accountProfile, this.userProfile).subscribe((data) => {
+            console.log(data);
+            data.length ? this.iamblock = true : this.iamblock = false;
+            this.spinner.hide();
+            console.log('iamblock' + this.iamblock);
+
+          });
+          this.checkBlock$ = this.data.isBlock(this.accountProfile, this.userProfile).subscribe((data) => {
+            console.log(data);
+            data.length ? this.block = true : this.block = false;
+            this.spinner.hide();
+            console.log('block' + this.block);
+
+          });
+          this.checkIsFollow$ = this.data.isFollow(this.accountProfile, this.userProfile).subscribe((data) => {
+          console.log(data);
           data.length ? this.followingUser = true : this.followingUser = false;
-          this.friendList();
+          this.listFollows();
+          this.listFollowers();
           this.spinner.hide();
+          console.log('fo' + this.followingUser);
+
         });
       });
+
     } else {
       this.auth.getAuthUser().subscribe((user: User) => {
         this.data.getProfile(user).subscribe((profile: Profile) => {
           this.spinner.hide();
           this.userProfile = profile as Profile;
           this.existingProfile.emit(this.userProfile);
-          this.friendList();
+          this.listFollows();
+          this.listFollowers();
+
         });
       });
     }
@@ -54,22 +84,28 @@ export class ProfileDetailComponent implements OnInit {
 
 
 
-  addFriend() {
-      const result = this.data.addFriend(this.accountProfile, this.userProfile);
+  follow() {
+      const result = this.data.follow(this.accountProfile, this.userProfile);
       console.log(result);
-      const data = { res: result, op: 'added' };
+      const data = { res: result, op: 'Follow' };
       this.Operation.emit(data);
   }
 
-  friendList() {
-     this.data.friendList(this.userProfile).subscribe((listF) => {
-       this.list = listF;
+  listFollows() {
+     this.data.listFollows(this.userProfile).subscribe((list) => {
+       this.list = list;
        console.log(this.list);
      });
   }
-  deleteFriend() {
-    const result = this.data.deleteFriend(this.accountProfile, this.userProfile);
-    const data = { res: result, op: 'dismiss' };
+  listFollowers() {
+    this.data.listFollowers(this.userProfile).subscribe((listF) => {
+      this.listF = listF;
+      console.log(this.list);
+    });
+ }
+  unFollow() {
+    const result = this.data.unFollow(this.accountProfile, this.userProfile);
+    const data = { res: result, op: 'Unfollow ' };
     this.Operation.emit(data);
   }
 
@@ -79,8 +115,8 @@ export class ProfileDetailComponent implements OnInit {
     this.nav.navigateRoot([`/login`]);
   }
 
-  navigate() {
-    const user = this.userProfile;
+  navigate(val) {
+    const user = {uid: this.userProfile.uid , email: this.userProfile.email , op: val};
     this.nav.navigateForward([`/friend-list`, user]);
   }
   showPic(url) {
@@ -89,5 +125,22 @@ export class ProfileDetailComponent implements OnInit {
   ready() {
     console.log('ready');
     this.spinner.hide();
+  }
+  blockUser() {
+    const result = this.data.block(this.accountProfile, this.userProfile);
+    console.log(result);
+    const data = { res: result, op: 'Block' };
+    this.Operation.emit(data);
+  }
+  disBlock() {
+    const result = this.data.disBlock(this.accountProfile, this.userProfile);
+    console.log(result);
+    const data = { res: result, op: 'Disblock' };
+    this.Operation.emit(data);
+  }
+  ngOnDestroy(): void {
+    this.checkBlock$.unsubscribe();
+    this.checkIamBlock$.unsubscribe();
+    this.checkIsFollow$.unsubscribe();
   }
 }
